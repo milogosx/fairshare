@@ -1,0 +1,2 @@
+# fairshare
+Bill splitting app
