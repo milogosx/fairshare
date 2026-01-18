@@ -218,9 +218,17 @@ export default function ReceiptSplitter() {
     setPendingClaims(pendingClaims.filter(claim => claim.id !== itemId));
   };
 
-  const confirmClaims = async () => {
-    if (pendingClaims.length === 0 && optionalSharedItems.length === 0) {
+ const confirmClaims = async () => {
+    const myOptionalItems = optionalSharedItems.filter(opt => opt.person === currentPerson);
+    const hasSharedAllItems = items.some(item => item.itemType === 'sharedAll');
+    
+    if (pendingClaims.length === 0 && myOptionalItems.length === 0 && !hasSharedAllItems) {
       alert('Please claim some items or select optional shared items');
+      return;
+    }
+    
+    if (!currentPerson.trim()) {
+      alert('Please enter your name first');
       return;
     }
 
@@ -899,19 +907,20 @@ export default function ReceiptSplitter() {
                 <h3 className="text-xl font-bold mb-4 text-gray-700">Available Items ({unclaimedItems.length})</h3>
                 <div className="space-y-2">
                   {unclaimedItems.map(item => (
-                    <div key={item.id} className="flex justify-between items-center p-4 bg-gradient-to-r from-gray-50 to-purple-50 rounded-xl hover:shadow-md transition-all border border-purple-100">
-                      <div>
-                        <span className="font-medium">{item.name}</span>
-                        <span className="ml-3 text-purple-600 font-bold">${item.price.toFixed(2)}</span>
-                      </div>
-                      <button
-                        onClick={() => claimItem(item.id)}
-                        className="px-5 py-2 bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white rounded-xl hover:shadow-lg transition-all font-semibold"
-                      >
-                        Add to My Items
-                      </button>
-                    </div>
-                  ))}
+  <div key={item.id} className="flex justify-between items-center py-2 px-3 bg-white rounded-lg hover:bg-purple-50 transition-all border border-gray-200">
+    <div className="flex items-center gap-2">
+      <span className="w-2 h-2 bg-purple-400 rounded-full"></span>
+      <span className="text-sm font-medium">{item.name}</span>
+      <span className="text-sm text-purple-600 font-semibold">${item.price.toFixed(2)}</span>
+    </div>
+    <button
+      onClick={() => claimItem(item.id)}
+      className="px-3 py-1 text-sm bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all font-medium"
+    >
+      + Claim
+    </button>
+  </div>
+))}
                 </div>
               </div>
             )}
@@ -943,14 +952,14 @@ export default function ReceiptSplitter() {
                             </span>
                           )}
                         </div>
-                        {!gift && currentPerson && (
-                          <button
-                            onClick={() => giftSharedItem(item.id, currentPerson)}
-                            className="text-sm text-purple-600 hover:text-purple-800 font-medium"
-                          >
-                            🎁 I'll cover this for everyone
-                          </button>
-                        )}
+                       {!gift && currentPerson && (
+  <button
+    onClick={() => giftSharedItem(item.id, currentPerson)}
+    className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+  >
+    Cover full amount
+  </button>
+)}
                         {isMyGift && (
                           <button
                             onClick={() => ungiftSharedItem(item.id)}
