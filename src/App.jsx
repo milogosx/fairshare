@@ -27,7 +27,7 @@ export default function ReceiptSplitter() {
 
   React.useEffect(() => {
     const loadReceiptData = async () => {
-      const urlParams = new URLSearchParams(.location.search);
+      const urlParams = new URLSearchParams(window.location.search);
       const id = urlParams.get('receipt');
       
       if (id) {
@@ -744,7 +744,7 @@ export default function ReceiptSplitter() {
                 
                 const id = 'receipt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                 setReceiptId(id);
-                const link = .location.origin + .location.pathname + '?receipt=' + id;
+                const link = window.location.origin + window.location.pathname + '?receipt=' + id;
                 setShareableLink(link);
                 
                 const data = {
