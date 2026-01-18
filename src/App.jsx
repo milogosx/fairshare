@@ -1183,76 +1183,91 @@ export default function ReceiptSplitter() {
                         ))}
                       </div>
 
-                      <div className="bg-white rounded-xl p-4 mb-3 shadow-sm border border-green-100">
-                        <div className="space-y-2 text-sm">
-                          <div className="flex justify-between">
-                            <span>Your items:</span>
-                            <span className="font-semibold">${totals.subtotal.toFixed(2)}</span>
-                          </div>
-                          {totals.sharedAll > 0 && (
+                      {person === currentPerson ? (
+                        <div className="bg-white rounded-xl p-4 mb-3 shadow-sm border border-green-100">
+                          <div className="space-y-2 text-sm">
                             <div className="flex justify-between">
-                              <span>Shared items (split equally):</span>
-                              <span className="font-semibold">+${totals.sharedAll.toFixed(2)}</span>
+                              <span>Your items:</span>
+                              <span className="font-semibold">${totals.subtotal.toFixed(2)}</span>
                             </div>
-                          )}
-                          {totals.giftedByMe > 0 && (
-                            <div className="flex justify-between text-green-700">
-                              <span>🎁 Shared items you're covering:</span>
-                              <span className="font-semibold">+${totals.giftedByMe.toFixed(2)}</span>
+                            {totals.sharedAll > 0 && (
+                              <div className="flex justify-between">
+                                <span>Shared items (split equally):</span>
+                                <span className="font-semibold">+${totals.sharedAll.toFixed(2)}</span>
+                              </div>
+                            )}
+                            {totals.giftedByMe > 0 && (
+                              <div className="flex justify-between text-green-700">
+                                <span>🎁 Shared items you're covering:</span>
+                                <span className="font-semibold">+${totals.giftedByMe.toFixed(2)}</span>
+                              </div>
+                            )}
+                            {totals.sharedOptional > 0 && (
+                              <div className="flex justify-between">
+                                <span>Optional shared items:</span>
+                                <span className="font-semibold">+${totals.sharedOptional.toFixed(2)}</span>
+                              </div>
+                            )}
+                            <div className="mt-2 mb-2">
+                              <div className="flex justify-between text-gray-600 font-medium mb-1">
+                                <span>Your share of additional costs:</span>
+                                <span>+${totals.additionalCosts.toFixed(2)}</span>
+                              </div>
+                              <div className="ml-4 space-y-1 text-xs text-gray-500">
+                                {additionalCosts.map((cost, idx) => {
+                                  const perPerson = cost.amount / parseInt(totalPeople);
+                                  const share = perPerson * totals.peopleCount;
+                                  return (
+                                    <div key={idx} className="flex justify-between">
+                                      <span>{cost.name} (${perPerson.toFixed(2)}/person x {totals.peopleCount}):</span>
+                                      <span>${share.toFixed(2)}</span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
                             </div>
-                          )}
-                          {totals.sharedOptional > 0 && (
-                            <div className="flex justify-between">
-                              <span>Optional shared items:</span>
-                              <span className="font-semibold">+${totals.sharedOptional.toFixed(2)}</span>
+                            <div className="flex justify-between text-lg font-bold pt-2 border-t-2 border-green-200">
+                              <span>Total to pay:</span>
+                              <span className="text-green-600">${totals.total.toFixed(2)}</span>
                             </div>
-                          )}
-                          <div className="mt-2 mb-2">
-                            <div className="flex justify-between text-gray-600 font-medium mb-1">
-                              <span>Your share of additional costs:</span>
-                              <span>+${totals.additionalCosts.toFixed(2)}</span>
-                            </div>
-                            <div className="ml-4 space-y-1 text-xs text-gray-500">
-                              {additionalCosts.map((cost, idx) => {
-                                const perPerson = cost.amount / parseInt(totalPeople);
-                                const share = perPerson * totals.peopleCount;
-                                return (
-                                  <div key={idx} className="flex justify-between">
-                                    <span>{cost.name} (${perPerson.toFixed(2)}/person x {totals.peopleCount}):</span>
-                                    <span>${share.toFixed(2)}</span>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </div>
-                          <div className="flex justify-between text-lg font-bold pt-2 border-t-2 border-green-200">
-                            <span>Total to pay:</span>
-                            <span className="text-green-600">${totals.total.toFixed(2)}</span>
                           </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div className="bg-gray-50 rounded-xl p-3 mb-3 border border-gray-200">
+                          <div className="flex justify-between text-sm font-semibold">
+                            <span>Total:</span>
+                            <span className="text-gray-700">${totals.total.toFixed(2)}</span>
+                          </div>
+                        </div>
+                      )}
 
                       <div>
                         {!isPaid ? (
-                          <div className="space-y-2">
-                            <a
-                              href={'https://venmo.com/?txn=pay&amount=' + totals.total.toFixed(2)}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="block w-full text-center bg-gradient-to-r from-green-600 to-emerald-600 text-white py-3 rounded-xl hover:shadow-xl font-bold"
-                            >
-                              Pay ${totals.total.toFixed(2)} with Venmo
-                            </a>
-                            <button
-                              onClick={() => handleMarkAsPaid(person)}
-                              className="block w-full text-center bg-gray-200 text-gray-700 py-2 rounded-xl hover:bg-gray-300 font-medium text-sm"
-                            >
-                              Mark as Paid
-                            </button>
-                          </div>
+                          person === currentPerson ? (
+                            <div className="space-y-2">
+                              
+                                href={'https://venmo.com/?txn=pay&amount=' + totals.total.toFixed(2)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block w-full text-center bg-gradient-to-r from-green-600 to-emerald-600 text-white py-3 rounded-xl hover:shadow-xl font-bold"
+                              >
+                                Pay ${totals.total.toFixed(2)} with Venmo
+                              </a>
+                              <button
+                                onClick={() => handleMarkAsPaid(person)}
+                                className="block w-full text-center bg-gray-200 text-gray-700 py-2 rounded-xl hover:bg-gray-300 font-medium text-sm"
+                              >
+                                Mark as Paid
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="text-center py-2 text-gray-500 text-sm">
+                              Owes ${totals.total.toFixed(2)}
+                            </div>
+                          )
                         ) : (
                           <div className="text-center py-3 bg-green-100 text-green-800 rounded-xl font-semibold">
-                            Payment Confirmed
+                            ✓ Paid
                           </div>
                         )}
                       </div>
