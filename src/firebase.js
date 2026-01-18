@@ -4,6 +4,7 @@ import { getDatabase, ref, set, get, remove } from 'firebase/database';
 const firebaseConfig = {
 apiKey: "AIzaSyBnmc5dnYkxPvDG7tV3Gvx-n_AH3oDbvX8",
 authDomain: "[fairsharegroup-61387.firebaseapp.com](http://fairsharegroup-61387.firebaseapp.com/)",
+databaseURL: "https://fairsharegroup-61387-default-rtdb.firebaseio.com",
 projectId: "fairsharegroup-61387",
 storageBucket: "fairsharegroup-61387.firebasestorage.app",
 messagingSenderId: "200281376262",
