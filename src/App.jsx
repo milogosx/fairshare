@@ -1245,7 +1245,7 @@ export default function ReceiptSplitter() {
                         {!isPaid ? (
                           person === currentPerson ? (
                             <div className="space-y-2">
-                              
+                                <a
                                 href={'https://venmo.com/?txn=pay&amount=' + totals.total.toFixed(2)}
                                 target="_blank"
                                 rel="noopener noreferrer"
