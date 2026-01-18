@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { storage } from './firebase';
 import { Upload, Plus, X, DollarSign, Users, Check } from 'lucide-react';
 
 export default function ReceiptSplitter() {
@@ -26,14 +27,14 @@ export default function ReceiptSplitter() {
 
   React.useEffect(() => {
     const loadReceiptData = async () => {
-      const urlParams = new URLSearchParams(window.location.search);
+      const urlParams = new URLSearchParams(.location.search);
       const id = urlParams.get('receipt');
       
       if (id) {
         setReceiptId(id);
         setLoading(true);
         try {
-          const result = await window.storage.get(id, true);
+          const result = await storage.get(id, true);
           if (result) {
             const data = JSON.parse(result.value);
             setItems(data.items || []);
@@ -75,7 +76,7 @@ export default function ReceiptSplitter() {
         viewerStatus: updatedViewers || viewerStatus,
         giftedItems: updatedGifted !== undefined ? updatedGifted : giftedItems
       };
-      await window.storage.set(receiptId, JSON.stringify(data), true);
+      await storage.set(receiptId, JSON.stringify(data), true);
     } catch (error) {
       console.error('Error saving receipt:', error);
     }
@@ -743,7 +744,7 @@ export default function ReceiptSplitter() {
                 
                 const id = 'receipt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                 setReceiptId(id);
-                const link = window.location.origin + window.location.pathname + '?receipt=' + id;
+                const link = .location.origin + .location.pathname + '?receipt=' + id;
                 setShareableLink(link);
                 
                 const data = {
@@ -758,7 +759,7 @@ export default function ReceiptSplitter() {
                   viewerStatus: {},
                   giftedItems: []
                 };
-                window.storage.set(id, JSON.stringify(data), true);
+                storage.set(id, JSON.stringify(data), true);
                 
                 setStep('split');
               }}
